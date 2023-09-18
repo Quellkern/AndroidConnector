@@ -14,7 +14,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +28,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidConnectorTheme {
+                val sendtext = remember{
+                    mutableStateOf("Send")
+                }
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier
@@ -48,22 +52,15 @@ class MainActivity : ComponentActivity() {
                                 .border(1.dp, color = Color.Blue),
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            MyButton("Send") {
+                            Button(onClick = {sendtext.value = "Sent"}) {
+                                Text(text = sendtext.value)
                             }
                         }
 
                     }
-                  }
+                }
             }
 
         }
     }
 }
-@Composable
-@Suppress("SameParameterValue")
-private fun MyButton(btext: String?, function: () -> Unit){
-    Button(onClick = function){
-        Text(text = "$btext")
-    }
-}
-
