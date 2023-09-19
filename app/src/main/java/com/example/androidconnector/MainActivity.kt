@@ -51,13 +51,10 @@ class MainActivity : ComponentActivity() {
         Box(
             modifier
                 .requiredSize(height = 200.dp, width = 300.dp)
-//                .border(1.dp, Color.White)
-
         ) {
             Column(
                 modifier = Modifier
                     .align(Alignment.Center)
-//                    .border(1.dp, Color.Red)
             ){
                 InputTextField()
             }
@@ -81,10 +78,8 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier,
             shape = AbsoluteRoundedCornerShape(8.dp),
             value = textFieldState,
-            onValueChange = {
-                textFieldState = it
-            },
-            label = { Text(text = "Enter Text") },
+            onValueChange = {textFieldState = it},
+            label = {Text(text = "Enter Text")},
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Color.LightGray,
                 disabledTextColor = Color.Transparent,
@@ -105,11 +100,13 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier,
             onClick = {
                 sendButtonState.value = "Sent"
-
                       },
             shape = RoundedCornerShape(size = 20.dp)
         ) {
             Text(text = sendButtonState.value)
+
         }
+
     }
+
 }
