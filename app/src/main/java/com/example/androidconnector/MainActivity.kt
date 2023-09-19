@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
         val sendButtonState = remember {
             mutableStateOf("Send")
         }
-        var sendButtonBool = remember{ mutableStateOf(false)}
+        val sendButtonBool = remember{ mutableStateOf(false)}
         if (sendButtonBool.value){
             LaunchedEffect(Unit){
                 sendButtonState.value = "Sent"
