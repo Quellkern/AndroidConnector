@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.androidconnector.ui.theme.AndroidConnectorTheme
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,17 +99,24 @@ class MainActivity : ComponentActivity() {
         val sendButtonState = remember {
             mutableStateOf("Send")
         }
+        var sendButtonBool = remember{ mutableStateOf(false)}
+        if (sendButtonBool.value){
+            LaunchedEffect(Unit){
+                sendButtonState.value = "Sent"
+                delay(0.7.seconds)
+                sendButtonState.value = "Send"
+                sendButtonBool.value = false
+            }
+        }
         Button(
             modifier = Modifier,
             onClick = {
-                sendButtonState.value = "Sent"
-                      },
+                sendButtonBool.value = true
+            },
             shape = RoundedCornerShape(size = 20.dp)
         ) {
             Text(text = sendButtonState.value)
-
-        }
-
+            }
     }
 
 }
