@@ -3,6 +3,7 @@ package com.example.androidconnector
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    UIBackground()
                     TextBox()
                 }
             }
@@ -116,7 +118,11 @@ class MainActivity : ComponentActivity() {
             shape = RoundedCornerShape(size = 20.dp)
         ) {
             Text(text = sendButtonState.value)
-            }
+        }
     }
+}
 
+@Composable
+fun UIBackground() {
+    Box(modifier = Modifier.background(color = Color(0.1f, 0.1f, 0.1f,)))
 }
