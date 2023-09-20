@@ -130,20 +130,17 @@ class MainActivity : ComponentActivity() {
     }
 
     private suspend fun requestPost(data: String) = coroutineScope {
-        launch {
+        launch{
             val httpClient = OkHttpClient()
             val request = Request.Builder()
                 .url("https://api.thingspeak.com/update?api_key=4FOB8L6C8KS0M0OC&field1=$data")
                 .build()
             httpClient.run {
-                newCall(request).enqueue(object : Callback{
+                httpClient.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
-                        TODO("Not yet implemented")
+                        TODO("Not Yet Implemented")
                     }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        TODO("Not yet implemented")
-                    }
+                    override fun onResponse(call: Call, response: Response){}
                 })
             }
 
