@@ -13,11 +13,10 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,9 +37,7 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import org.conscrypt.Conscrypt
 import java.io.IOException
-import java.security.Security
 import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
@@ -83,24 +80,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun InputTextField() {
         var textFieldState: String by remember {
             mutableStateOf("")
         }
-        TextField(
+        OutlinedTextField(
             modifier = Modifier,
             shape = AbsoluteRoundedCornerShape(8.dp),
             value = textFieldState,
             onValueChange = { textFieldState = it },
             label = { Text(text = "Enter Text") },
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = Color.LightGray,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.LightGray,
+                unfocusedTextColor = Color.LightGray,
                 disabledTextColor = Color.Transparent,
-                containerColor = Color.DarkGray,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.DarkGray,
+                unfocusedIndicatorColor = Color.DarkGray,
                 disabledIndicatorColor = Color.Transparent
             )
         )
@@ -134,16 +133,14 @@ class MainActivity : ComponentActivity() {
 
     private suspend fun requestPost(data: String) = coroutineScope {
         async {
-            Security.insertProviderAt(Conscrypt.newProvider(), 1)
             val httpClient = OkHttpClient()
             val request = Request.Builder()
                 .url("https://api.thingspeak.com/update?api_key=4FOB8L6C8KS0M0OC&field1=$data")
                 .build()
             httpClient.run {
                 newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {/* TODO */}
-                    override fun onResponse(call: Call, response: Response) =
-                        println(response.body?.string())
+                    override fun onFailure(call: Call, e: IOException) {/* TODO SnackBar Showing Exception */}
+                    override fun onResponse(call: Call, response: Response) { }
                 })
             }
 
