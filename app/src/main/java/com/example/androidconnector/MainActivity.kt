@@ -30,7 +30,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.androidconnector.ui.theme.AndroidConnectorTheme
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.conscrypt.Conscrypt
+import java.io.IOException
+import java.security.Security
 import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
@@ -60,14 +70,14 @@ class MainActivity : ComponentActivity() {
             Column(
                 modifier = Modifier
                     .align(Alignment.Center)
-            ){
+            ) {
                 InputTextField()
             }
-            Row (
+            Row(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(bottom = 17.dp, end = 10.dp),
-            ){
+            ) {
                 WriteReqBox()
             }
         }
@@ -83,8 +93,8 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier,
             shape = AbsoluteRoundedCornerShape(8.dp),
             value = textFieldState,
-            onValueChange = {textFieldState = it},
-            label = {Text(text = "Enter Text")},
+            onValueChange = { textFieldState = it },
+            label = { Text(text = "Enter Text") },
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Color.LightGray,
                 disabledTextColor = Color.Transparent,
@@ -97,13 +107,14 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun WriteReqBox(){
+    fun WriteReqBox() {
         val sendButtonState = remember {
             mutableStateOf("Send")
         }
-        val sendButtonBool = remember{ mutableStateOf(false)}
-        if (sendButtonBool.value){
-            LaunchedEffect(Unit){
+        val sendButtonBool = remember { mutableStateOf(false) }
+        if (sendButtonBool.value) {
+            LaunchedEffect(Unit) {
+                requestPost(sendButtonState.value)
                 sendButtonState.value = "Sent"
                 delay(0.7.seconds)
                 sendButtonState.value = "Send"
@@ -120,9 +131,27 @@ class MainActivity : ComponentActivity() {
             Text(text = sendButtonState.value)
         }
     }
-}
 
-@Composable
-fun UIBackground() {
-    Box(modifier = Modifier.background(color = Color(0.1f, 0.1f, 0.1f,)))
+    private suspend fun requestPost(data: String) = coroutineScope {
+        async {
+            Security.insertProviderAt(Conscrypt.newProvider(), 1)
+            val httpClient = OkHttpClient()
+            val request = Request.Builder()
+                .url("https://api.thingspeak.com/update?api_key=4FOB8L6C8KS0M0OC&field1=$data")
+                .build()
+            httpClient.run {
+                newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {/* TODO */}
+                    override fun onResponse(call: Call, response: Response) =
+                        println(response.body?.string())
+                })
+            }
+
+        }
+    }
+
+    @Composable
+    fun UIBackground() {
+        Box(modifier = Modifier.background(color = Color(0.1f, 0.1f, 0.1f)))
+    }
 }
