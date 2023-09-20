@@ -29,9 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.androidconnector.ui.theme.AndroidConnectorTheme
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -132,15 +132,20 @@ class MainActivity : ComponentActivity() {
     }
 
     private suspend fun requestPost(data: String) = coroutineScope {
-        async {
+        launch {
             val httpClient = OkHttpClient()
             val request = Request.Builder()
                 .url("https://api.thingspeak.com/update?api_key=4FOB8L6C8KS0M0OC&field1=$data")
                 .build()
             httpClient.run {
-                newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {/* TODO SnackBar Showing Exception */}
-                    override fun onResponse(call: Call, response: Response) { }
+                newCall(request).enqueue(object : Callback{
+                    override fun onFailure(call: Call, e: IOException) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        TODO("Not yet implemented")
+                    }
                 })
             }
 
