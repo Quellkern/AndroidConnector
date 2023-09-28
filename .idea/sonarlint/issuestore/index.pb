@@ -17,3 +17,5 @@ S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 C
 settings.gradle.kts,7\4\749edfcc96398253e5b3416184e95c46621da850
+p
+@app/src/main/java/com/example/androidconnector/TextPostScreen.kt,4\f\4f5e75ee61a3e70bfe629dd8f1b77a6b7fef0c5d
