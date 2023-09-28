@@ -5,9 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,7 +53,7 @@ class TextPostScreen : ComponentActivity() {
     }
     @Composable
     fun TextBox() {
-        val modifier: Modifier = Modifier
+        var modifier: Modifier = Modifier
         Box(
             modifier
                 .requiredSize(height = 200.dp, width = 300.dp)
@@ -66,13 +64,7 @@ class TextPostScreen : ComponentActivity() {
             ) {
                 InputTextField()
             }
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 17.dp, end = 10.dp),
-            ) {
-                WriteReqBox()
-            }
+
         }
     }
 
@@ -81,49 +73,50 @@ class TextPostScreen : ComponentActivity() {
         var textFieldState: String by remember {
             mutableStateOf("")
         }
-        OutlinedTextField(
-            modifier = Modifier,
-            shape = AbsoluteRoundedCornerShape(8.dp),
-            value = textFieldState,
-            onValueChange = { textFieldState = it },
-            label = { Text(text = "Enter Text") },
-            colors = TextFieldDefaults.colors(
-                focusedTextColor = Color.LightGray,
-                unfocusedTextColor = Color.LightGray,
-                disabledTextColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.DarkGray,
-                unfocusedIndicatorColor = Color.DarkGray,
-                disabledIndicatorColor = Color.Transparent
-            )
-        )
-    }
-
-    @Composable
-    fun WriteReqBox() {
-        val sendButtonState = remember {
-            mutableStateOf("Send")
-        }
-        val sendButtonBool = remember { mutableStateOf(false) }
-        if (sendButtonBool.value) {
-            LaunchedEffect(Unit) {
-                requestPost(sendButtonState.value)
-                sendButtonState.value = "Sent"
-                delay(0.7.seconds)
-                sendButtonState.value = "Send"
-                sendButtonBool.value = false
-            }
-        }
-        Button(
-            modifier = Modifier,
-            onClick = {
-                sendButtonBool.value = true
-            },
-            shape = RoundedCornerShape(size = 20.dp)
+        Column(
+            horizontalAlignment = Alignment.End
         ) {
-            Text(text = sendButtonState.value)
+            OutlinedTextField(
+                modifier = Modifier,
+                shape = AbsoluteRoundedCornerShape(8.dp),
+                value = textFieldState,
+                onValueChange = { textFieldState = it },
+                label = { Text(text = "Enter Text") },
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.LightGray,
+                    unfocusedTextColor = Color.LightGray,
+                    disabledTextColor = Color.Transparent,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.DarkGray,
+                    unfocusedIndicatorColor = Color.DarkGray,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedLabelColor = Color.Transparent
+                )
+            )
+            val sendButtonState = remember {
+                mutableStateOf("Send")
+            }
+            val sendButtonBool = remember { mutableStateOf(false) }
+            if (sendButtonBool.value) {
+                LaunchedEffect(Unit) {
+                    requestPost(textFieldState)
+                    sendButtonState.value = "Sent"
+                    delay(0.7.seconds)
+                    sendButtonState.value = "Send"
+                    sendButtonBool.value = false
+                }
+            }
+            Button(
+                modifier = Modifier,
+                onClick = {
+                    sendButtonBool.value = true
+                },
+                shape = RoundedCornerShape(size = 20.dp)
+            ) {
+                Text(text = sendButtonState.value)
+            }
         }
     }
 
